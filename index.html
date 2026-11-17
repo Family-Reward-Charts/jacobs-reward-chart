@@ -1,0 +1,2451 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jacob's Football Reward Chart</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #102b20;
+      color: white;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 25px;
+      background: #174d35;
+      border: 3px solid #d5b45b;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+    }
+
+    .subtitle {
+      color: #f4d77b;
+      margin-top: 10px;
+    }
+
+    .section {
+      background: #174d35;
+      border: 2px solid #397653;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section h2 {
+      color: #f4d77b;
+      margin-top: 0;
+    }
+    .scoreboard {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 10px;
+      background: #102b20;
+      border: 2px solid #d5b45b;
+      border-radius: 12px;
+      padding: 15px 8px;
+      margin: 15px auto;
+    }
+
+    .team-name {
+      font-weight: bold;
+      font-size: 14px;
+      flex: 1;
+    }
+
+    .score {
+      font-size: 28px;
+      font-weight: bold;
+      color: #f4d77b;
+      white-space: nowrap;
+    }
+    .placeholder {
+      color: #d5e7da;
+    }
+    .task-panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .task-panel {
+      background: #102b20;
+      border: 2px solid #d5b45b;
+      border-radius: 12px;
+      padding: 15px 10px;
+    }
+
+    .task-panel h3 {
+      color: #f4d77b;
+      font-size: 17px;
+      margin-top: 0;
+    }
+
+    .task-panel p {
+      margin: 12px 0;
+      text-align: left;
+      font-size: 14px;
+    }
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 14px 0;
+      text-align: left;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .morning-timer {
+      background: #182b20;
+      border: 2px solid #d5b45b;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 12px 0;
+      color: #f5d77b;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .morning-timer span {
+      display: inline-block;
+      min-width: 75px;
+      font-size: 20px;
+      color: #ffffff;
+    }
+
+    .evening-timer {
+      background: #182b20;
+      border: 2px solid #d5b45b;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 12px 0;
+      color: #f5d77b;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .evening-timer span {
+      display: inline-block;
+      min-width: 75px;
+      font-size: 20px;
+      color: #ffffff;
+    }
+
+    .task-item input {
+      width: 20px;
+      height: 20px;
+      accent-color: #d5b45b;
+      cursor: pointer;
+    }
+    .goal-reward {
+      color: #f4d77b;
+      font-weight: bold;
+      font-size: 13px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 600px) {
+      .task-panels {
+        grid-template-columns: 1fr;
+      }
+    }
+    /* Football pitch */
+    .pitch {
+      position: relative;
+      max-width: 420px;
+      height: 520px;
+      margin: 20px auto;
+      background: repeating-linear-gradient(
+        0deg,
+        #23834a,
+        #23834a 65px,
+        #1d7541 65px,
+        #1d7541 130px
+      );
+      border: 4px solid white;
+      border-radius: 8px;
+        overflow: visible;
+    }
+
+    .pitch::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      border-top: 2px solid white;
+    }
+
+    .centre-circle {
+      position: absolute;
+      width: 75px;
+      height: 75px;
+      border: 2px solid white;
+      border-radius: 50%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .goal {
+      position: absolute;
+      left: 50%;
+      width: 90px;
+      height: 28px;
+      transform: translateX(-50%);
+      border: 3px solid white;
+      background-color: rgba(255, 255, 255, 0.12);
+      background-image:
+        linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px);
+      background-size: 12px 12px;
+      z-index: 3;
+    }
+
+    .goal-top {
+      top: 0;
+      border-top: none;
+    }
+
+    .goal-bottom {
+      bottom: 0;
+      border-bottom: none;
+    }
+
+    .football {
+      position: absolute;
+      left: 50%;
+      bottom: 60px;
+      transform: translateX(-50%);
+      font-size: 32px;
+    transition: bottom 0.5s ease, left 0.5s ease, transform 0.5s ease;
+      z-index: 2;
+    }
+.football.kicking {
+  animation: kick-spin 0.5s ease-in-out;
+}
+
+@keyframes kick-spin {
+  from {
+    transform: translateX(-50%) rotate(0deg);
+  }
+  to {
+    transform: translateX(-50%) rotate(360deg);
+  }
+}
+
+    .pitch-label {
+      position: absolute;
+      left: 0;
+      right: 0;
+      font-size: 12px;
+      font-weight: bold;
+      text-shadow: 1px 1px 3px black;
+    }
+
+    .pitch-label-top {
+      top: -25px;
+    }
+
+    .pitch-label-bottom {
+      bottom: -25px;
+    }
+    /* Football players */
+.player {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid white;
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.player.red {
+  background: #d71920;
+}
+
+.player.blue {
+  background: #2474d2;
+}
+
+.player::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  left: 6px;
+  top: 6px;
+}
+        /* Penalty areas */
+    .penalty-area {
+      position: absolute;
+      left: 50%;
+      width: 65%;
+      height: 95px;
+      transform: translateX(-50%);
+      border: 2px solid white;
+    }
+
+    .penalty-top {
+      top: 0;
+      border-top: none;
+    }
+
+    .penalty-bottom {
+      bottom: 0;
+      border-bottom: none;
+    }
+
+    /* Six-yard boxes */
+    .six-yard-box {
+      position: absolute;
+      left: 50%;
+      width: 35%;
+      height: 38px;
+      transform: translateX(-50%);
+      border: 2px solid white;
+    }
+
+    .six-yard-top {
+      top: 0;
+      border-top: none;
+    }
+
+    .six-yard-bottom {
+      bottom: 0;
+      border-bottom: none;
+    }
+
+    /* Penalty D arcs */
+    .penalty-arc {
+      position: absolute;
+      left: 50%;
+      width: 110px;
+      height: 55px;
+      transform: translateX(-50%);
+      border: 2px solid white;
+      border-radius: 50%;
+    }
+
+    .arc-top {
+      top: 68px;
+      clip-path: inset(50% 0 0 0);
+    }
+
+    .arc-bottom {
+      bottom: 68px;
+      clip-path: inset(0 0 50% 0);
+    }
+    /* Evening Kick-Off button */
+.evening-kickoff-btn {
+  display: block;
+  margin: 15px auto 20px;
+  padding: 13px 24px;
+  background: linear-gradient(135deg, #d5b45b, #f5d77b);
+  color: #182b20;
+  border: 2px solid #fff1b8;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #96752d,
+              0 6px 12px rgba(0,0,0,0.25);
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.evening-kickoff-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #96752d,
+              0 8px 14px rgba(0,0,0,0.3);
+}
+
+.evening-kickoff-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #96752d;
+}
+
+/* REWARD SHOP */
+
+.reward-balances {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin: 20px 0 30px;
+}
+
+.reward-balance {
+  background: #182b20;
+  border: 2px solid #d5b45b;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+}
+
+.reward-balance h3 {
+  color: #f5d77b;
+  font-size: 17px;
+  margin: 0 0 12px;
+}
+
+.reward-balance p {
+  color: white;
+  font-size: 34px;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.reward-balance span {
+  color: #d5d5d5;
+  font-size: 13px;
+}
+
+#weekly-rewards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+.reward-card {
+  background: #182b20;
+  border: 2px solid #d5b45b;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+}
+
+.reward-card h4 {
+  color: #f5d77b;
+  margin: 0 0 12px;
+}
+
+.reward-card p {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+/* Monthly Champions progress bar */
+.monthly-progress {
+  background: #102b20;
+  border: 2px solid #d5b45b;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0 20px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 22px;
+  background: #eeeeee;
+  border: 1px solid #d5b45b;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #23834a, #65d68a);
+  border-radius: 12px;
+  transition: width 0.4s ease;
+}
+
+.monthly-reward {
+  background: #182b20;
+  border: 2px solid #d5b45b;
+  border-radius: 12px;
+  padding: 12px;
+  margin: 12px 0;
+}
+
+.monthly-reward h4 {
+  color: #f5d77b;
+  margin: 5px 0 12px;
+}
+
+.monthly-reward button {
+  background: #d5b45b;
+  color: #182b20;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.monthly-reward button:disabled {
+  background: #777;
+  color: #ddd;
+  cursor: not-allowed;
+}
+.reward-card button {
+  background: #d5b45b;
+  color: #182b20;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+@media (max-width: 600px) {
+  .reward-balances {
+    grid-template-columns: 1fr;
+  }
+
+  #weekly-rewards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Player Collection */
+.player-collection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.player-card {
+  position: relative;
+  width: 250px;
+  height: 390px;
+  border-radius: 16px;
+  padding: 14px;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+  color: #222;
+}
+
+.card-rating {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.card-club {
+  position: absolute;
+  top: 15px;
+  right: 12px;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.card-player-image {
+  font-size: 85px;
+  margin-top: 55px;
+  margin-bottom: 8px;
+}
+.card-player-image img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+.card-player-name {
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.card-position {
+  font-size: 11px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.card-divider {
+  height: 2px;
+  background: currentColor;
+  margin: 12px 5px;
+  opacity: 0.5;
+}
+
+.card-details {
+  display: flex;
+  justify-content: space-around;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.card-date {
+  font-size: 10px;
+  margin-top: 12px;
+  opacity: 0.8;
+}
+
+/* Silver card */
+.player-card.silver {
+  background: linear-gradient(145deg, #ffffff, #aeb7c2, #e7e7e7);
+  border: 3px solid #89939f;
+  box-shadow: 0 0 12px rgba(200, 210, 220, 0.7);
+}
+
+/* Gold card */
+.player-card.gold {
+  background: linear-gradient(145deg, #fff8c9, #d6a928, #fff0a0);
+  border: 3px solid #b58a16;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+}
+
+/* Rare card */
+.player-card.rare {
+  background: linear-gradient(145deg, #493080, #211044, #100823);
+  border: 3px solid #c5a3ff;
+  color: white;
+  box-shadow: 0 0 18px rgba(160, 100, 255, 0.8);
+}
+
+/* Legendary card */
+.player-card.legendary {
+  background: linear-gradient(145deg, #292929, #080808, #3b2b08);
+  border: 3px solid #ffd700;
+  color: #fff4c2;
+  box-shadow: 0 0 22px rgba(255, 215, 0, 0.9);
+}
+
+.player-card h3 {
+  margin: 8px 0;
+  font-size: 18px;
+}
+
+.player-card p {
+  font-size: 13px;
+  margin: 6px 0;
+}
+
+.player-card .card-icon {
+  font-size: 48px;
+  margin: 12px 0;
+}
+/* Monthly League Table */
+.league-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #333;
+}
+
+.league-table th,
+.league-table td {
+  border: 1px solid #888;
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.league-table th {
+  background: #eeeeee;
+  color: #222;
+}
+
+.league-result-day {
+  background: #f2f2f2;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+.league-result-day h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.league-result-match {
+  margin: 6px 0;
+  padding: 6px;
+}
+
+.jacob-match {
+  background: #fff3cd;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header>
+      <h1>⚽ Jacob's Football Reward Chart ⚽</h1>
+      <p class="subtitle">Every task completed brings us closer to victory!</p>
+    </header>
+
+
+<section class="section">
+  <h2>🏟️ Match Day</h2>
+
+  <div class="scoreboard">
+    <div class="team-name">😈 Jacob's Red Devils</div>
+  <div class="score" id="score">0 - 0</div>
+    <div class="team-name">⚽ Opponents</div>
+  </div>
+
+  <div class="task-panels">
+
+    <div class="task-panel">
+      <h3>🌅 Morning Kick-Off</h3>
+      <div class="morning-timer">
+  ⏰ Time left: <span id="morning-countdown">Loading...</span>
+</div>
+
+      <p>First Half</p>
+<button class="evening-kickoff-btn" onclick="morningKickOff()">
+  ⚽ FIRST HALF – KICK OFF!
+</button>   
+<label class="task-item">
+  <input type="checkbox" id="morning-0" onchange="updateTask('morning', 0, this.checked)">
+  Wake up after 6:50am
+</label>
+
+<label class="task-item">
+  <input type="checkbox" id="morning-1" onchange="updateTask('morning', 1, this.checked)">
+  Let Buddy out
+</label>
+
+<label class="task-item">
+  <input type="checkbox" id="morning-2" onchange="updateTask('morning', 2, this.checked)">
+  Pack my school bag
+</label>
+
+<label class="task-item">
+  <input type="checkbox" id="morning-3" onchange="updateTask('morning', 3, this.checked)">
+  Get dressed and shoes on
+</label>
+
+<label class="task-item">
+  <input type="checkbox" id="morning-4" onchange="updateTask('morning', 4, this.checked)">
+  Kindness
+</label>
+
+</div>
+
+<div class="task-panel">
+  <h3>🌙 Evening Kick-Off</h3>
+     <div class="evening-timer">
+  ⏰ Time left: <span id="evening-countdown">Loading...</span>
+</div> 
+      <p>Second Half</p>
+<button class="evening-kickoff-btn" onclick="eveningKickOff()">
+  ⚽ SECOND HALF – KICK OFF!
+</button>
+<label class="task-item">
+  <input type="checkbox" id="evening-0" onchange="updateTask('evening', 0, this.checked)">
+  Kindness
+</label>
+
+<label class="task-item">
+  <input type="checkbox" id="evening-1" onchange="updateTask('evening', 1, this.checked)">
+  Put pyjamas on
+</label>
+
+<label class="task-item">
+  <input type="checkbox" id="evening-2" onchange="updateTask('evening', 2, this.checked)">
+  Reading / Spelling
+</label>
+
+<label class="task-item">
+  <input type="checkbox" id="evening-3" onchange="updateTask('evening', 3, this.checked)">
+  Make my packed lunch
+</label>
+
+<label class="task-item">
+  <input type="checkbox" id="evening-4" onchange="updateTask('evening', 4, this.checked)">
+  Walk Buddy
+</label>
+
+<div class="goal-reward">⚽ Complete all 5 = GOAL!</div>
+</div>
+</div>
+  <div class="pitch">
+    <div class="goal goal-top"></div>
+    <div class="goal goal-bottom"></div>
+
+    <div class="penalty-area penalty-top"></div>
+    <div class="penalty-area penalty-bottom"></div>
+
+    <div class="six-yard-box six-yard-top"></div>
+    <div class="six-yard-box six-yard-bottom"></div>
+
+    <div class="penalty-arc arc-top"></div>
+    <div class="penalty-arc arc-bottom"></div>
+
+    <div class="centre-circle"></div>
+<!-- Jacob's Red Devils -->
+<div class="player red" style="left: 25%; top: 82%;"></div>
+<div class="player red" style="left: 75%; top: 82%;"></div>
+<div class="player red" style="left: 15%; top: 60%;"></div>
+<div class="player red" style="left: 85%; top: 60%;"></div>
+<div class="player red" style="left: 30%; top: 30%;"></div>
+<div class="player red" style="left: 70%; top: 30%;"></div>
+
+<!-- Opponents -->
+<div class="player blue" style="left: 75%; top: 70%;"></div>
+<div class="player blue" style="left: 25%; top: 70%;"></div>
+<div class="player blue" style="left: 85%; top: 48%;"></div>
+<div class="player blue" style="left: 15%; top: 48%;"></div>
+<div class="player blue" style="left: 70%; top: 15%;"></div>
+<div class="player blue" style="left: 30%; top: 15%;"></div>
+    <div class="pitch-label pitch-label-top">
+      OPPONENT'S GOAL
+    </div>
+
+    <div class="pitch-label pitch-label-bottom">
+      JACOB'S GOAL
+    </div>
+
+<div class="football" id="football">⚽</div>
+</div>
+
+<p class="placeholder">
+  Complete your daily challenges to move the ball up the pitch!
+</p>
+
+</section>
+
+
+<section class="section">
+  <h2>🏆 Monthly League</h2>
+
+  <p id="league-month">November 2026 Season</p>
+
+<table class="league-table">
+  <thead>
+    <tr>
+      <th>Pos</th>
+      <th>Team</th>
+      <th>Played</th>
+      <th>Pts</th>
+    </tr>
+  </thead>
+  <tbody id="league-table-body">
+  </tbody>
+</table>
+</section>
+
+<section class="section">
+  <h2>⚽ Latest Match Results</h2>
+  <div id="league-results">
+    <p class="placeholder">No matches played yet. Results will appear here!</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>🏆 League Hall of Fame</h2>
+  <div id="league-hall-of-fame">
+    <p>No champions crowned yet. The first season is underway!</p>
+  </div>
+</section>
+
+
+<section class="section">
+  <h2>🏪 Reward Shop</h2>
+
+  <div class="reward-balances">
+    <div class="reward-balance">
+      <h3>🪙 Weekly Points</h3>
+      <p id="weekly-points">0</p>
+      <span>Available to spend</span>
+    </div>
+
+    <div class="reward-balance">
+      <h3>🏦 Monthly Savings</h3>
+      <p id="monthly-savings">0</p>
+      <span>Saved towards your big prize</span>
+    </div>
+  </div>
+
+  <h3>🏆 Weekly Rewards</h3>
+  <p class="placeholder">
+    Choose your rewards and spend your hard-earned points whenever you're ready!
+  </p>
+
+<div id="weekly-rewards">
+  <div class="reward-card bronze">
+    <h4>🥉 Bronze – Meal Deal</h4>
+    <p>100 points</p>
+    <button onclick="buyWeeklyReward('bronze')">Buy Reward</button>
+  </div>
+
+  <div class="reward-card silver">
+    <h4>🥈 Silver – £5 Pocket Money</h4>
+    <p>200 points</p>
+    <button onclick="buyWeeklyReward('silver')">Buy Reward</button>
+  </div>
+
+  <div class="reward-card gold">
+    <h4>🥇 Gold – Choose Family Film or TV with Snacks</h4>
+    <p>400 points</p>
+    <button onclick="buyWeeklyReward('gold')">Buy Reward</button>
+  </div>
+</div>
+
+ 
+<h3>🌟 Monthly Champions Prize</h3>
+
+<div class="monthly-progress">
+  <p>Monthly tasks completed: <strong id="monthly-tasks-completed">0</strong></p>
+  <p>Target: <strong id="monthly-target">0</strong></p>
+
+  <div class="progress-bar">
+    <div id="monthly-progress-fill" class="progress-fill"></div>
+  </div>
+
+  <p id="monthly-progress-message">
+    Keep going, Jacob!
+  </p>
+</div>
+
+<div class="monthly-reward">
+  <h4>📚 New Book – 175 points</h4>
+  <button id="monthly-book-button" onclick="buyMonthlyReward('New Book')">
+    Buy New Book
+  </button>
+</div>
+
+<div class="monthly-reward">
+  <h4>🎬 Family Cinema Trip – 220 points</h4>
+  <button id="monthly-cinema-button" onclick="buyMonthlyReward('Family Cinema Trip')">
+    Buy Cinema Trip
+  </button>
+</div>
+
+<p id="monthly-reward-message"></p>
+</section>
+
+<section class="section">
+  <h2>🃏 Player Collection</h2>
+
+  <div id="player-collection" class="player-collection">
+    <p class="placeholder">No football cards collected yet. Keep playing!</p>
+  </div>
+<button onclick="clearPlayerCollection()">
+  🔒 Parent: Clear Player Collection
+</button>
+
+<button onclick="resetAllProgress()">
+  🔒 Parent: Reset Entire Reward Chart
+</button>
+</section>
+
+  </div>
+  
+<script>
+  // Jacob's daily tasks
+ const morningTasks = [
+  "Wake up after 6:50am",
+  "Let Buddy out",
+  "Pack my school bag",
+  "Get dressed and shoes on",
+  "Kindness"
+];
+const eveningTasks = [
+  "Kindness",
+  "Put pyjamas on",
+  "Reading / Spelling",
+  "Make my packed lunch",
+  "Walk Buddy"
+];
+
+function getMonthlyTarget() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+
+  // Find the fourth Saturday of this month
+  let saturdayCount = 0;
+  let fourthSaturday = 0;
+
+  for (let day = 1; day <= 28; day++) {
+    const date = new Date(year, month, day);
+
+    if (date.getDay() === 6) {
+      saturdayCount++;
+
+      if (saturdayCount === 4) {
+        fourthSaturday = day;
+        break;
+      }
+    }
+  }
+
+  const totalTasks =
+    fourthSaturday * (morningTasks.length + eveningTasks.length);
+
+  return {
+    fourthSaturday,
+    totalTasks,
+    requiredTasks: Math.ceil(totalTasks * 0.8)
+  };
+}
+function hasQualifiedForMonthlyPrize() {
+  const target = getMonthlyTarget();
+
+  return jacobState.monthlyTasksCompleted >=
+    target.requiredTasks;
+}
+const monthlyRewards = [
+  {
+    name: "New Book",
+    cost: 175
+  },
+  {
+    name: "Family Cinema Trip",
+    cost: 220
+  }
+];
+
+// Jacob's 60 football players
+const playerDatabase = [
+
+  // 🔴 Manchester United and former United players
+  {
+  name: "Bruno Fernandes",
+  club: "Manchester United",
+  position: "Midfielder",
+  number: 8,
+  rating: 91,
+  stats: {
+    pace: 84,
+    shooting: 91,
+    passing: 94,
+    dribbling: 88,
+    defending: 70,
+    physical: 82
+  }
+},
+  { name: "Kobbie Mainoo", club: "Manchester United", position: "Midfielder", number: 37, rating: 84 },
+  { name: "Marcus Rashford", club: "Manchester United", position: "Forward", number: 10, rating: 88 },
+  { name: "Casemiro", club: "Manchester United", position: "Midfielder", number: 18, rating: 87 },
+  { name: "Harry Maguire", club: "Manchester United", position: "Defender", number: 5, rating: 82 },
+  { name: "Scott McTominay", club: "Napoli", position: "Midfielder", number: 8, rating: 84 },
+  { name: "Wayne Rooney", club: "Manchester United Legend", position: "Forward", number: 10, rating: 96 },
+  { name: "David Beckham", club: "Manchester United Legend", position: "Midfielder", number: 7, rating: 95 },
+  { name: "Ryan Giggs", club: "Manchester United Legend", position: "Winger", number: 11, rating: 95 },
+  { name: "Roy Keane", club: "Manchester United Legend", position: "Midfielder", number: 16, rating: 94 },
+  { name: "Eric Cantona", club: "Manchester United Legend", position: "Forward", number: 7, rating: 95 },
+  { name: "Paul Scholes", club: "Manchester United Legend", position: "Midfielder", number: 18, rating: 95 },
+  { name: "Cristiano Ronaldo", club: "Manchester United Legend", position: "Forward", number: 7, rating: 99 },
+  { name: "Ruud van Nistelrooy", club: "Manchester United Legend", position: "Striker", number: 10, rating: 94 },
+  { name: "Rio Ferdinand", club: "Manchester United Legend", position: "Defender", number: 5, rating: 93 },
+
+  // 🌍 Current football stars
+  { name: "Lionel Messi", club: "Inter Miami", position: "Forward", number: 10, rating: 99 },
+  { name: "Harry Kane", club: "Bayern Munich", position: "Striker", number: 9, rating: 96 },
+  { name: "Kylian Mbappé", club: "Real Madrid", position: "Forward", number: 10, rating: 98 },
+  { name: "Neymar Jr", club: "Santos", position: "Forward", number: 10, rating: 94 },
+  { name: "Erling Haaland", club: "Manchester City", position: "Striker", number: 9, rating: 97 },
+  { name: "Mohamed Salah", club: "Liverpool", position: "Forward", number: 11, rating: 96 },
+  { name: "Bukayo Saka", club: "Arsenal", position: "Winger", number: 7, rating: 93 },
+  { name: "Jude Bellingham", club: "Real Madrid", position: "Midfielder", number: 5, rating: 96 },
+  { name: "Vinícius Júnior", club: "Real Madrid", position: "Forward", number: 7, rating: 97 },
+  { name: "Phil Foden", club: "Manchester City", position: "Midfielder", number: 47, rating: 93 },
+  { name: "Kevin De Bruyne", club: "Napoli", position: "Midfielder", number: 11, rating: 95 },
+  { name: "Cole Palmer", club: "Chelsea", position: "Midfielder", number: 10, rating: 92 },
+  { name: "Declan Rice", club: "Arsenal", position: "Midfielder", number: 41, rating: 92 },
+  { name: "Son Heung-min", club: "LAFC", position: "Forward", number: 7, rating: 92 },
+  { name: "Lamine Yamal", club: "Barcelona", position: "Winger", number: 10, rating: 95 },
+  { name: "Pedri", club: "Barcelona", position: "Midfielder", number: 8, rating: 92 },
+  { name: "Robert Lewandowski", club: "Barcelona", position: "Striker", number: 9, rating: 95 },
+  { name: "Rodri", club: "Manchester City", position: "Midfielder", number: 16, rating: 95 },
+  { name: "Virgil van Dijk", club: "Liverpool", position: "Defender", number: 4, rating: 94 },
+  { name: "Trent Alexander-Arnold", club: "Real Madrid", position: "Defender", number: 12, rating: 91 },
+  { name: "Martin Ødegaard", club: "Arsenal", position: "Midfielder", number: 8, rating: 92 },
+  { name: "Antoine Griezmann", club: "Atlético Madrid", position: "Forward", number: 7, rating: 93 },
+  { name: "Lautaro Martínez", club: "Inter Milan", position: "Striker", number: 10, rating: 93 },
+  { name: "Jamal Musiala", club: "Bayern Munich", position: "Midfielder", number: 42, rating: 93 },
+  { name: "Victor Osimhen", club: "Galatasaray", position: "Striker", number: 45, rating: 92 },
+
+  // 🏆 Football legends
+  { name: "Ronaldinho", club: "Football Legend", position: "Forward", number: 10, rating: 98 },
+  { name: "Pelé", club: "Football Legend", position: "Forward", number: 10, rating: 99 },
+  { name: "Diego Maradona", club: "Football Legend", position: "Midfielder", number: 10, rating: 99 },
+  { name: "Zinedine Zidane", club: "Football Legend", position: "Midfielder", number: 10, rating: 98 },
+  { name: "Ronaldo Nazário (R9)", club: "Football Legend", position: "Striker", number: 9, rating: 98 },
+  { name: "Thierry Henry", club: "Football Legend", position: "Striker", number: 14, rating: 97 },
+  { name: "Ronald Koeman", club: "Football Legend", position: "Defender", number: 4, rating: 92 },
+  { name: "Paolo Maldini", club: "Football Legend", position: "Defender", number: 3, rating: 98 },
+  { name: "Francesco Totti", club: "Football Legend", position: "Forward", number: 10, rating: 96 },
+  { name: "Andrea Pirlo", club: "Football Legend", position: "Midfielder", number: 21, rating: 96 },
+  { name: "Xavi", club: "Football Legend", position: "Midfielder", number: 6, rating: 97 },
+  { name: "Andrés Iniesta", club: "Football Legend", position: "Midfielder", number: 8, rating: 97 },
+  { name: "Steven Gerrard", club: "Football Legend", position: "Midfielder", number: 8, rating: 97 },
+  { name: "Frank Lampard", club: "Football Legend", position: "Midfielder", number: 8, rating: 96 },
+  { name: "Didier Drogba", club: "Football Legend", position: "Striker", number: 11, rating: 96 },
+  { name: "Alan Shearer", club: "Football Legend", position: "Striker", number: 9, rating: 96 },
+  { name: "Peter Schmeichel", club: "Football Legend", position: "Goalkeeper", number: 1, rating: 96 },
+  { name: "Roberto Carlos", club: "Football Legend", position: "Defender", number: 3, rating: 96 },
+  { name: "Luís Figo", club: "Football Legend", position: "Winger", number: 7, rating: 96 },
+  { name: "Johan Cruyff", club: "Football Legend", position: "Forward", number: 14, rating: 98 }
+
+];
+
+// Add the agreed stats and overall ratings to all 60 players
+const playerStats = {
+  // Group 1 – Manchester United and former United
+  "Bruno Fernandes": [84, 91, 94, 88, 70, 82, 91, "Gold"],
+  "Kobbie Mainoo": [76, 70, 82, 85, 75, 76, 81, "Silver"],
+  "Marcus Rashford": [89, 82, 77, 85, 42, 75, 82, "Silver"],
+  "Casemiro": [55, 73, 80, 72, 85, 83, 80, "Silver"],
+  "Harry Maguire": [50, 68, 72, 63, 86, 89, 83, "Silver"],
+  "Scott McTominay": [75, 81, 77, 76, 76, 86, 83, "Silver"],
+  "Wayne Rooney": [90, 93, 87, 91, 55, 88, 93, "Gold"],
+  "David Beckham": [65, 85, 96, 83, 65, 78, 92, "Gold"],
+  "Ryan Giggs": [92, 85, 88, 94, 45, 72, 92, "Gold"],
+  "Roy Keane": [74, 78, 87, 82, 89, 91, 92, "Gold"],
+  "Eric Cantona": [76, 91, 88, 90, 52, 86, 92, "Gold"],
+  "Paul Scholes": [65, 89, 96, 88, 70, 72, 93, "Gold"],
+  "Cristiano Ronaldo": [88, 90, 78, 86, 35, 76, 86, "Gold"],
+  "Ruud van Nistelrooy": [78, 96, 76, 82, 40, 83, 93, "Gold"],
+  "Rio Ferdinand": [83, 58, 78, 75, 93, 86, 91, "Gold"],
+
+  // Group 2 – Current football stars
+  "Lionel Messi": [75, 90, 94, 93, 35, 65, 88, "Gold"],
+  "Harry Kane": [70, 94, 87, 82, 50, 82, 91, "Gold"],
+  "Kylian Mbappé": [97, 94, 82, 93, 40, 85, 94, "Gold"],
+  "Neymar Jr": [82, 84, 87, 91, 35, 60, 82, "Silver"],
+  "Erling Haaland": [91, 96, 72, 80, 45, 90, 93, "Gold"],
+  "Mohamed Salah": [88, 91, 83, 89, 45, 75, 88, "Gold"],
+  "Bukayo Saka": [87, 85, 84, 90, 65, 72, 89, "Gold"],
+  "Jude Bellingham": [82, 86, 87, 89, 78, 85, 91, "Gold"],
+  "Vinícius Júnior": [96, 87, 80, 95, 35, 70, 92, "Gold"],
+  "Phil Foden": [82, 84, 87, 91, 55, 65, 86, "Gold"],
+  "Kevin De Bruyne": [65, 83, 94, 86, 55, 65, 83, "Silver"],
+  "Cole Palmer": [76, 88, 90, 90, 55, 72, 88, "Gold"],
+  "Declan Rice": [75, 75, 87, 82, 86, 85, 88, "Gold"],
+  "Son Heung-min": [85, 86, 80, 85, 40, 68, 84, "Silver"],
+  "Lamine Yamal": [91, 84, 88, 96, 45, 65, 94, "Gold"],
+  "Pedri": [76, 72, 93, 91, 72, 65, 91, "Gold"],
+  "Robert Lewandowski": [65, 91, 78, 80, 40, 78, 85, "Silver"],
+  "Rodri": [65, 75, 93, 82, 88, 85, 89, "Gold"],
+  "Virgil van Dijk": [78, 60, 75, 72, 94, 90, 88, "Gold"],
+  "Trent Alexander-Arnold": [72, 70, 95, 82, 76, 75, 87, "Gold"],
+  "Martin Ødegaard": [75, 78, 92, 91, 60, 65, 88, "Gold"],
+  "Antoine Griezmann": [78, 85, 87, 88, 60, 70, 85, "Silver"],
+  "Lautaro Martínez": [82, 90, 78, 85, 50, 82, 89, "Gold"],
+  "Jamal Musiala": [87, 82, 85, 94, 45, 68, 90, "Gold"],
+  "Victor Osimhen": [94, 89, 65, 84, 40, 88, 88, "Gold"],
+
+  // Group 3 – Football legends
+  "Ronaldinho": [91, 90, 91, 98, 38, 78, 95, "Gold"],
+  "Pelé": [95, 96, 90, 95, 55, 85, 98, "Gold"],
+  "Diego Maradona": [88, 92, 95, 99, 40, 75, 98, "Gold"],
+  "Zinedine Zidane": [80, 86, 96, 96, 65, 85, 96, "Gold"],
+  "Ronaldo Nazário (R9)": [97, 96, 80, 97, 35, 85, 97, "Gold"],
+  "Thierry Henry": [94, 94, 87, 93, 45, 82, 95, "Gold"],
+  "Ronald Koeman": [65, 85, 92, 75, 90, 88, 92, "Gold"],
+  "Paolo Maldini": [85, 55, 75, 70, 97, 85, 94, "Gold"],
+  "Francesco Totti": [76, 93, 95, 91, 45, 80, 94, "Gold"],
+  "Andrea Pirlo": [65, 78, 98, 90, 65, 70, 94, "Gold"],
+  "Xavi": [72, 75, 97, 94, 75, 68, 95, "Gold"],
+  "Andrés Iniesta": [78, 75, 96, 97, 65, 70, 95, "Gold"],
+  "Steven Gerrard": [85, 90, 91, 85, 80, 90, 94, "Gold"],
+  "Frank Lampard": [75, 91, 88, 82, 75, 85, 92, "Gold"],
+  "Didier Drogba": [85, 92, 78, 82, 45, 95, 93, "Gold"],
+  "Alan Shearer": [78, 96, 75, 78, 45, 92, 93, "Gold"],
+  "Peter Schmeichel": [65, 35, 65, 50, 95, 95, 93, "Gold"],
+  "Roberto Carlos": [95, 85, 87, 90, 85, 88, 94, "Gold"],
+  "Luís Figo": [88, 86, 91, 94, 50, 75, 94, "Gold"],
+  "Johan Cruyff": [90, 92, 96, 97, 45, 78, 96, "Gold"],
+};
+
+// Apply the stats and overall ratings to the player database
+playerDatabase.forEach(player => {
+  const values = playerStats[player.name];
+
+  if (values) {
+   const [pace, shooting, passing, dribbling, defending, physical, rating, edition] = values;
+
+    player.stats = {
+      pace,
+      shooting,
+      passing,
+      dribbling,
+      defending,
+      physical
+    };
+
+    player.rating = rating;
+    player.edition = edition;
+  }
+});
+// TEMPORARY: Test player starting editions
+
+// TEMPORARY: Test all player starting editions
+
+function testPlayerEditions() {
+
+  const goldPlayers = playerDatabase.filter(
+    player => player.edition === "Gold"
+  );
+
+  const silverPlayers = playerDatabase.filter(
+    player => player.edition === "Silver"
+  );
+
+  const missingPlayers = playerDatabase.filter(
+    player => !player.edition
+  );
+
+  const results = document.createElement("div");
+
+  results.innerHTML = `
+    <h2>Player Edition Test</h2>
+    <p>Total players: ${playerDatabase.length}</p>
+    <p>Gold players: ${goldPlayers.length}</p>
+    <p>Silver players: ${silverPlayers.length}</p>
+    <p>Missing editions: ${missingPlayers.length}</p>
+    <h3>Players missing editions</h3>
+    <p>${missingPlayers.map(player => player.name).join(", ") || "None"}</p>
+  `;
+
+  document.body.appendChild(results);
+
+}
+// Get today's date in local time
+function getTodayDateKey() {
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return year + "-" + month + "-" + day;
+}
+
+// Get the current month in local time
+function getTodayMonthKey() {
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+
+  return year + "-" + month;
+}
+
+// Save Jacob's progress
+function saveJacobState() {
+  localStorage.setItem(
+    "jacobRewardChart",
+    JSON.stringify(jacobState)
+  );
+}
+ // Load Jacob's saved progress
+ 
+function loadJacobState() {
+  const saved = localStorage.getItem("jacobRewardChart");
+
+  if (saved) {
+    const state = JSON.parse(saved);
+
+    // Add new reward-system values without losing existing progress
+    return {
+      ...state,
+      weeklyPoints: state.weeklyPoints ?? 0,
+      monthlySavings: state.monthlySavings ?? 0,
+      monthlySavingsMonth: state.monthlySavingsMonth ?? getTodayMonthKey(),
+      monthlyPrizeClaimed: state.monthlyPrizeClaimed ?? false,
+      monthlyTasksCompleted: state.monthlyTasksCompleted ?? 0,
+      weeklyPointsSpent: state.weeklyPointsSpent ?? 0,
+      claimedWeeklyRewards: state.claimedWeeklyRewards ?? [],
+    // Monthly league data
+    leagueMonth: state.leagueMonth ?? getTodayMonthKey(),
+    leaguePoints: state.leaguePoints ?? [0, 0, 0, 0, 0, 0],
+    leaguePlayed: state.leaguePlayed ?? [0, 0, 0, 0, 0, 0],
+    leagueResults: state.leagueResults ?? [],
+    leagueHallOfFame: state.leagueHallOfFame ?? [],
+      // Football card collection
+      playerCards: state.playerCards ?? [],
+
+      // Perfect-day streak for Rare cards
+      perfectDayStreak: state.perfectDayStreak ?? 0,
+
+      // Track the last day a card was awarded
+      lastCardAwardDate: state.lastCardAwardDate ?? null,
+      currentDayDate: state.currentDayDate ?? getTodayDateKey()
+    };
+  }
+
+  return {
+    morningCompleted: [],
+    eveningCompleted: [],
+    morningGoalScored: false,
+    eveningGoalScored: false,
+    weeklyPoints: 0,
+    monthlySavings: 0,
+    monthlySavingsMonth: getTodayMonthKey(),
+    monthlyPrizeClaimed: false,
+    monthlyTasksCompleted: 0,
+    weeklyPointsSpent: 0,
+    claimedWeeklyRewards: [],
+    // Monthly league data
+    leagueMonth: getTodayMonthKey(),
+    leaguePoints: [0, 0, 0, 0, 0, 0],
+    leaguePlayed: [0, 0, 0, 0, 0, 0],
+    leagueResults: [],
+    leagueHallOfFame: [],
+    // Football card collection
+    playerCards: [],
+
+    // Perfect-day streak for Rare cards
+    perfectDayStreak: 0,
+
+    // Track the last day a card was awarded
+    lastCardAwardDate: null,
+    currentDayDate: getTodayDateKey()
+  };
+}
+
+const leagueTeams = [
+  "😈 Jacob's Red Devils",
+  "⚡ Thunder FC",
+  "🔥 Phoenix United",
+  "🐍 Viper Athletic",
+  "🌪️ Storm Rangers",
+  "🐉 Dragon City FC"
+];
+const leagueFixtures = [
+  // Round 1
+  [[0, 5], [1, 4], [2, 3]],
+
+  // Round 2
+  [[0, 4], [5, 3], [1, 2]],
+
+  // Round 3
+  [[0, 3], [4, 2], [5, 1]],
+
+  // Round 4
+  [[0, 2], [3, 1], [4, 5]],
+
+  // Round 5
+  [[0, 1], [2, 5], [3, 4]]
+];
+
+const leagueStrengths = [
+  0,    // Jacob - determined; his results are calculated separately
+  0.70, // Thunder FC - very strong
+  0.62, // Phoenix United - strong
+  0.50, // Viper Athletic - average
+  0.50, // Storm Rangers - average
+  0.38  // Dragon City FC - underdogs
+];
+
+
+function simulateLeagueMatch(homeTeam, awayTeam) {
+
+  const homeStrength = leagueStrengths[homeTeam];
+  const awayStrength = leagueStrengths[awayTeam];
+
+  // Add some randomness so unexpected results can happen
+  const homeChance = homeStrength + Math.random() * 0.5;
+  const awayChance = awayStrength + Math.random() * 0.5;
+
+  let homeGoals = Math.floor(Math.random() * 3);
+  let awayGoals = Math.floor(Math.random() * 3);
+
+  // Give the stronger team a slight advantage
+  if (homeChance > awayChance && homeGoals <= awayGoals) {
+    homeGoals = awayGoals + 1;
+  } else if (awayChance > homeChance && awayGoals <= homeGoals) {
+    awayGoals = homeGoals + 1;
+  }
+
+  return {
+    homeTeam,
+    awayTeam,
+    homeGoals,
+    awayGoals
+  };
+}
+
+
+function recordLeagueMatch(result) {
+
+  const home = result.homeTeam;
+  const away = result.awayTeam;
+
+  jacobState.leaguePlayed[home]++;
+  jacobState.leaguePlayed[away]++;
+
+  if (result.homeGoals > result.awayGoals) {
+    jacobState.leaguePoints[home] += 3;
+  } else if (result.awayGoals > result.homeGoals) {
+    jacobState.leaguePoints[away] += 3;
+  } else {
+    jacobState.leaguePoints[home]++;
+    jacobState.leaguePoints[away]++;
+  }
+
+}
+
+
+function awardYesterdayLeaguePoints() {
+
+  // Identify the day being finalised
+  const matchDate = jacobState.currentDayDate;
+
+  // Prevent the same day's matches being awarded twice
+  if (jacobState.leagueResults.some(result => result.date === matchDate)) {
+    return;
+  }
+
+  // Work out today's fixture round
+  const dayOfMonth = Number(matchDate.slice(8, 10));
+  const fixtureRound = (dayOfMonth - 1) % leagueFixtures.length;
+  const dailyFixtures = leagueFixtures[fixtureRound];
+
+  // Calculate Jacob's goals from his completed routines
+  const jacobGoals =
+    Number(jacobState.morningGoalScored) +
+    Number(jacobState.eveningGoalScored);
+
+  const dailyResults = [];
+
+  // Play all three matches
+  dailyFixtures.forEach(fixture => {
+
+    const homeTeam = fixture[0];
+    const awayTeam = fixture[1];
+
+    let result;
+
+    // Jacob's result is determined by his goals
+    if (homeTeam === 0 || awayTeam === 0) {
+
+      let opponentGoals = 0;
+
+      if (jacobGoals === 2) {
+        opponentGoals = Math.floor(Math.random() * 2);
+      } else if (jacobGoals === 1) {
+        opponentGoals = 1;
+      } else {
+        opponentGoals = 1 + Math.floor(Math.random() * 2);
+      }
+
+      result = {
+        homeTeam,
+        awayTeam,
+        homeGoals: homeTeam === 0 ? jacobGoals : opponentGoals,
+        awayGoals: awayTeam === 0 ? jacobGoals : opponentGoals
+      };
+
+    } else {
+      // Simulate matches between the other teams
+      result = simulateLeagueMatch(homeTeam, awayTeam);
+    }
+
+    // Award points and record the score
+    recordLeagueMatch(result);
+    dailyResults.push(result);
+
+  });
+
+  // Save all three results for this date
+  jacobState.leagueResults.push({
+    date: matchDate,
+    matches: dailyResults
+  });
+
+}
+
+function updateLeagueTable() {
+  const tableBody = document.getElementById("league-table-body");
+  const leagueMonthLabel = document.getElementById("league-month");
+const leagueDate = new Date(jacobState.leagueMonth + "-01");
+
+leagueMonthLabel.textContent =
+  leagueDate.toLocaleDateString("en-GB", {
+    month: "long",
+    year: "numeric"
+  }) + " Season";
+
+  const teams = leagueTeams.map((name, index) => ({
+    name: name,
+    points: jacobState.leaguePoints[index],
+    played: jacobState.leaguePlayed[index]
+  }));
+
+  teams.sort((a, b) => b.points - a.points);
+
+  tableBody.innerHTML = teams.map((team, index) => `
+    <tr>
+      <td>${index + 1}</td>
+      <td>${team.name}</td>
+      <td>${team.played}</td>
+      <td>${team.points}</td>
+    </tr>
+  `).join("");
+}
+
+
+function updateLeagueResults() {
+
+  const resultsContainer = document.getElementById("league-results");
+
+  // Show a message if no matches have been played yet
+  if (jacobState.leagueResults.length === 0) {
+    resultsContainer.innerHTML =
+      "<p class='placeholder'>No matches played yet. Results will appear here!</p>";
+    return;
+  }
+
+  // Show the five most recent matchdays first
+  const recentResults = jacobState.leagueResults
+    .slice(-5)
+    .reverse();
+
+  resultsContainer.innerHTML = recentResults.map(matchday => {
+
+    const matchDate = new Date(matchday.date + "T00:00:00");
+
+    const dateLabel = matchDate.toLocaleDateString("en-GB", {
+      weekday: "long",
+      day: "numeric",
+      month: "long"
+    });
+
+    const matchesHTML = matchday.matches.map(match => {
+
+      const homeName = leagueTeams[match.homeTeam];
+      const awayName = leagueTeams[match.awayTeam];
+
+      const isJacobMatch =
+        match.homeTeam === 0 || match.awayTeam === 0;
+
+      let jacobOutcome = "";
+
+      if (isJacobMatch) {
+        const jacobGoals = match.homeTeam === 0
+          ? match.homeGoals
+          : match.awayGoals;
+
+        const opponentGoals = match.homeTeam === 0
+          ? match.awayGoals
+          : match.homeGoals;
+
+        if (jacobGoals > opponentGoals) {
+          jacobOutcome = "WIN";
+        } else if (jacobGoals === opponentGoals) {
+          jacobOutcome = "DRAW";
+        } else {
+          jacobOutcome = "LOSS";
+        }
+      }
+
+      return `
+        <p class="league-result-match ${isJacobMatch ? "jacob-match" : ""}">
+          ${homeName} ${match.homeGoals} - ${match.awayGoals} ${awayName}
+          ${isJacobMatch ? `<strong> – ${jacobOutcome}</strong>` : ""}
+        </p>
+      `;
+
+    }).join("");
+
+    return `
+      <div class="league-result-day">
+        <h3>${dateLabel}</h3>
+        ${matchesHTML}
+      </div>
+    `;
+
+  }).join("");
+}
+
+
+function updateLeagueHallOfFame() {
+
+  const hallOfFame = document.getElementById("league-hall-of-fame");
+
+  if (jacobState.leagueHallOfFame.length === 0) {
+    hallOfFame.innerHTML = "<p>No champions crowned yet. The first season is underway!</p>";
+    return;
+  }
+
+  hallOfFame.innerHTML = jacobState.leagueHallOfFame
+    .slice()
+    .reverse()
+    .map(champion => `
+      <div class="hall-of-fame-entry">
+        <h3>🏆 ${champion.team}</h3>
+        <p>${champion.month} – ${champion.points} points</p>
+      </div>
+    `)
+    .join("");
+
+}
+
+function recordMonthlyLeagueChampion() {
+
+  // Don't record the same season twice
+  if (jacobState.leagueHallOfFame.some(
+    champion => champion.season === jacobState.leagueMonth
+  )) {
+    return;
+  }
+// Don't crown a champion if no matches have been played
+if (jacobState.leaguePlayed.every(played => played === 0)) {
+  return;
+}
+  const highestPoints = Math.max(...jacobState.leaguePoints);
+
+  // Find all teams tied for first place
+  const winningTeams = leagueTeams.filter((team, index) =>
+    jacobState.leaguePoints[index] === highestPoints
+  );
+
+  const seasonDate = new Date(jacobState.leagueMonth + "-01");
+
+  const seasonName = seasonDate.toLocaleDateString("en-GB", {
+    month: "long",
+    year: "numeric"
+  });
+
+  jacobState.leagueHallOfFame.push({
+    season: jacobState.leagueMonth,
+    month: seasonName,
+    team: winningTeams.join(" & "),
+    points: highestPoints
+  });
+
+}
+
+// Load Jacob's saved state
+let jacobState = loadJacobState();
+
+function checkForNewDay() {
+
+  const today = getTodayDateKey();
+
+  // Only continue if the date has changed
+  if (jacobState.currentDayDate === today) {
+    return;
+  }
+
+// Award a card only if yesterday hasn't already been processed
+if (jacobState.lastCardAwardDate !== jacobState.currentDayDate) {
+  awardYesterdayCard();
+  jacobState.lastCardAwardDate = jacobState.currentDayDate;
+  saveJacobState();
+}
+// Finalise yesterday's league matches
+awardYesterdayLeaguePoints();
+
+  // Start the new day with empty task progress
+  jacobState.morningCompleted = [];
+  jacobState.eveningCompleted = [];
+
+  // Reset the daily goal flags
+  jacobState.morningGoalScored = false;
+  jacobState.eveningGoalScored = false;
+
+  // Update the date
+  jacobState.currentDayDate = today;
+
+    // Check whether a new month has started
+  const currentMonth = getTodayMonthKey();
+
+  if (jacobState.monthlySavingsMonth !== currentMonth) {
+    jacobState.monthlySavingsMonth = currentMonth;
+    jacobState.monthlyPrizeClaimed = false;
+    jacobState.monthlyTasksCompleted = 0;
+  }
+// Reset the league for a new month
+if (jacobState.leagueMonth !== currentMonth) {
+  recordMonthlyLeagueChampion();
+  jacobState.leagueMonth = currentMonth;
+  jacobState.leaguePoints = [0, 0, 0, 0, 0, 0];
+  jacobState.leaguePlayed = [0, 0, 0, 0, 0, 0];
+  jacobState.leagueResults = [];
+}
+  // Save the new day's progress
+  saveJacobState();
+}
+ // Morning Kick-Off button
+function morningKickOff() {
+
+  // Start the first half
+  window.eveningRoutineActive = false;
+
+  // Reset morning task progress
+  jacobState.morningCompleted = [];
+  jacobState.morningGoalScored = false;
+
+  // Untick all four morning checkboxes
+  for (let i = 0; i < 5; i++) {
+    document.getElementById("morning-" + i).checked = false;
+  }
+
+  // Save and refresh everything
+  saveJacobState();
+  updateScoreboard();
+  updateFootballPosition();
+}
+ 
+  // Evening Kick-Off button
+function eveningKickOff() {
+
+  // Start the second half
+  window.eveningRoutineActive = true;
+
+  // Reset evening task progress
+  jacobState.eveningCompleted = [];
+  jacobState.eveningGoalScored = false;
+
+  // Untick all four evening checkboxes
+  for (let i = 0; i < 5; i++) {
+    document.getElementById("evening-" + i).checked = false;
+  }
+
+  // Save and refresh everything
+  saveJacobState();
+  updateScoreboard();
+  updateFootballPosition();
+}
+    // Update a completed task
+
+function updateTask(routine, index, isChecked) {
+  if (routine === "evening") {
+    window.eveningRoutineActive = true;
+  }
+
+  if (routine === "morning") {
+    window.eveningRoutineActive = false;
+  }
+
+  const key = routine === "morning"
+    ? "morningCompleted"
+    : "eveningCompleted";
+
+  if (isChecked) {
+    if (!jacobState[key].includes(index)) {
+      jacobState[key].push(index);
+
+      // Award one weekly point and one monthly savings point
+      jacobState.weeklyPoints += 10;
+      jacobState.monthlySavings++;
+      jacobState.monthlyTasksCompleted++;
+    }
+  } else {
+    if (jacobState[key].includes(index)) {
+      jacobState[key] = jacobState[key].filter(
+        taskIndex => taskIndex !== index
+      );
+
+      // Take back the points if the task is unticked
+      jacobState.weeklyPoints = Math.max(
+      0, jacobState.weeklyPoints - 10
+      );
+
+      jacobState.monthlySavings = Math.max(
+        0, jacobState.monthlySavings - 1
+      );
+      jacobState.monthlyTasksCompleted = Math.max(
+  0, jacobState.monthlyTasksCompleted - 1
+);
+    }
+  }
+
+  jacobState.morningGoalScored =
+    jacobState.morningCompleted.length === morningTasks.length;
+
+  jacobState.eveningGoalScored =
+    jacobState.eveningCompleted.length === eveningTasks.length;
+
+  saveJacobState();
+  updateScoreboard();
+  updateFootballPosition();
+}
+
+
+function awardYesterdayCard() {
+
+  // Count yesterday's completed tasks
+  const totalCompleted =
+    jacobState.morningCompleted.length +
+    jacobState.eveningCompleted.length;
+
+  let cardType = null;
+
+  if (totalCompleted === 10) {
+
+    // Add one to the perfect-day streak
+    jacobState.perfectDayStreak++;
+
+    // Every fifth perfect day earns a Rare card
+    if (jacobState.perfectDayStreak === 5) {
+      cardType = "Rare";
+      jacobState.perfectDayStreak = 0;
+    } else {
+      cardType = "Gold";
+    }
+
+  } else {
+
+    // A less-than-perfect day resets the streak
+    jacobState.perfectDayStreak = 0;
+
+    // Award Silver for completing 4–9 tasks
+    if (totalCompleted >= 4) {
+      cardType = "Silver";
+    }
+  }
+
+  // Only continue if a card has been earned
+  if (cardType !== null) {
+
+    // Randomly select from all 60 players
+    const randomIndex = Math.floor(
+      Math.random() * playerDatabase.length
+    );
+
+    const selectedPlayer = playerDatabase[randomIndex];
+
+    // Check whether Jacob already owns this player
+    const existingCard = jacobState.playerCards.find(
+      card => card.name === selectedPlayer.name
+    );
+
+    if (existingCard) {
+
+      // Upgrade the existing card
+      const upgradeLevels = ["Silver", "Gold", "Rare", "Legendary"];
+
+      const currentLevel = upgradeLevels.indexOf(existingCard.type);
+
+      if (currentLevel !== -1 && currentLevel < 3) {
+
+        const newEdition = upgradeLevels[currentLevel + 1];
+
+        const bonus = newEdition === "Rare" ? 3 :
+                      newEdition === "Legendary" ? 6 : 0;
+
+        existingCard.type = newEdition;
+        existingCard.edition = newEdition;
+
+        // Recalculate stats from the original player stats
+        existingCard.stats = {
+          pace: Math.min(99, selectedPlayer.stats.pace + bonus),
+          shooting: Math.min(99, selectedPlayer.stats.shooting + bonus),
+          passing: Math.min(99, selectedPlayer.stats.passing + bonus),
+          dribbling: Math.min(99, selectedPlayer.stats.dribbling + bonus),
+          defending: Math.min(99, selectedPlayer.stats.defending + bonus),
+          physical: Math.min(99, selectedPlayer.stats.physical + bonus)
+        };
+
+        // Update the card date
+        existingCard.date = jacobState.currentDayDate;
+
+      }
+
+    } else {
+
+      // Add the player's first card
+      jacobState.playerCards.push({
+        ...selectedPlayer,
+        type: selectedPlayer.edition,
+        date: jacobState.currentDayDate
+      });
+
+    }
+  }
+}
+
+
+// Display Jacob's football card collection
+
+
+// TEMPORARY: Display all 60 players to test their photos
+
+
+function testAllPlayerPhotos() {
+
+  const collection = document.getElementById("player-collection");
+
+  // Keep the real collection safe
+  const originalCards = jacobState.playerCards;
+
+const editions = ["Standard", "Rare", "Legendary"];
+  const testCards = [];
+// Create four test cards for every player
+playerDatabase.forEach(player => {
+
+  // Silver and Gold both use the Standard photograph
+  testCards.push({
+    ...player,
+    type: "Silver",
+    edition: "Standard",
+    date: "PHOTO TEST"
+  });
+
+  testCards.push({
+    ...player,
+    type: "Gold",
+    edition: "Standard",
+    date: "PHOTO TEST"
+  });
+
+  // Rare and Legendary use their own photographs
+  editions.forEach(edition => {
+    if (edition !== "Standard") {
+      testCards.push({
+        ...player,
+        type: edition,
+        edition: edition,
+        date: "PHOTO TEST"
+      });
+    }
+  });
+
+});
+  // Display all 180 test cards
+  jacobState.playerCards = testCards;
+  displayPlayerCards();
+
+  // Restore the real collection data immediately
+  jacobState.playerCards = originalCards;
+  displayPlayerCards();
+
+  // Check every photograph
+  const images = collection.querySelectorAll(".card-player-image img");
+
+  let loaded = 0;
+  let failed = 0;
+
+  // Create results display
+  let results = document.getElementById("photo-test-results");
+
+  if (!results) {
+    results = document.createElement("p");
+    results.id = "photo-test-results";
+    collection.parentNode.insertBefore(results, collection);
+  }
+
+  results.textContent = "Checking all 180 photographs...";
+
+  function updateResults() {
+    results.textContent =
+      "Photos loaded: " + loaded +
+      " | Photos missing: " + failed +
+      " | Total checked: " + (loaded + failed) +
+      " / 180";
+  }
+
+  images.forEach(img => {
+
+    img.onload = function() {
+      loaded++;
+      updateResults();
+    };
+
+    img.onerror = function() {
+      failed++;
+      img.style.border = "3px solid red";
+      img.alt = "PHOTO MISSING";
+      updateResults();
+    };
+
+    // Handle images that loaded before the event handlers were attached
+    if (img.complete) {
+      if (img.naturalWidth > 0) {
+        loaded++;
+      } else {
+        failed++;
+        img.style.border = "3px solid red";
+        img.alt = "PHOTO MISSING";
+      }
+      updateResults();
+    }
+
+  });
+}
+
+// Restore the real collection display
+function restorePlayerCollection() {
+  displayPlayerCards();
+}
+
+// Work out the correct photo filename for each player and edition
+function getPlayerImageFilename(playerName, edition) {
+
+  let filename = playerName
+    .toLowerCase()
+    .replace(/ø/g, "o")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9-]+/g, ".")
+    .replace(/^\.+|\.+$/g, "");
+
+  // Special filename for Ronaldo Nazário
+  if (playerName === "Ronaldo Nazário (R9)") {
+    filename = "ronaldo.nazario";
+  }
+
+const imageEdition = (edition === "Rare" || edition === "Legendary")
+  ? edition.toLowerCase()
+  : "standard";
+
+const baseFilename = filename + "." + imageEdition;
+
+  // Three photographs use .jpg instead of .jpeg
+  const jpgFiles = [
+    "harry.maguire.rare",
+    "martin.odegaard.rare",
+    "ronald.koeman.legendary"
+  ];
+
+  const extension = jpgFiles.includes(baseFilename)
+    ? ".jpg"
+    : ".jpeg";
+
+  return "player-images/" + baseFilename + extension;
+}
+
+
+// Display Jacob's player collection
+function displayPlayerCards() {
+
+  const collection = document.getElementById("player-collection");
+
+  // Show a message if no cards have been earned
+  if (jacobState.playerCards.length === 0) {
+    collection.innerHTML =
+      '<p class="placeholder">No football cards collected yet. Keep playing!</p>';
+    return;
+  }
+
+  collection.innerHTML = "";
+
+  jacobState.playerCards.forEach((card, index) => {
+
+    const cardElement = document.createElement("div");
+
+    cardElement.className = "player-card " + card.type.toLowerCase();
+
+    // Existing cards default to the Standard photograph
+    const edition = card.edition ?? "Standard";
+
+    const imageFilename = getPlayerImageFilename(card.name, edition);
+
+    cardElement.innerHTML = `
+      <div class="card-rating">${card.rating ?? "—"}</div>
+      <div class="card-club">${card.club ?? "Football Legend"}</div>
+
+      <div class="card-player-image">
+        <img src="${imageFilename}" alt="${card.name}">
+      </div>
+
+      <div class="card-player-name">${card.name ?? "Unknown Player"}</div>
+
+      <div class="card-position">
+        ${card.position ?? "Player"} · ${card.type.toUpperCase()} CARD
+      </div>
+
+      <div class="card-stats">
+        <span>PAC <b>${card.stats?.pace ?? "—"}</b></span>
+        <span>SHO <b>${card.stats?.shooting ?? "—"}</b></span>
+        <span>PAS <b>${card.stats?.passing ?? "—"}</b></span>
+        <span>DRI <b>${card.stats?.dribbling ?? "—"}</b></span>
+        <span>DEF <b>${card.stats?.defending ?? "—"}</b></span>
+        <span>PHY <b>${card.stats?.physical ?? "—"}</b></span>
+      </div>
+
+      <div class="card-divider"></div>
+
+      <div class="card-details">
+        <span>Shirt No. ${card.number ?? "—"}</span>
+        <span>Card ${index + 1} / 180</span>
+      </div>
+
+      <div class="card-date">${card.date}</div>
+    `;
+
+    collection.appendChild(cardElement);
+
+  });
+}
+
+function resetAllProgress() {
+
+  const password = prompt("Parent password required:");
+
+  if (password !== "2018") {
+    if (password !== null) {
+      alert("Incorrect password. Nothing has been cleared.");
+    }
+    return;
+  }
+
+  const confirmed = confirm(
+    "⚠️ RESET THE ENTIRE REWARD CHART?\n\n" +
+    "This will clear ALL saved progress, including:\n\n" +
+    "• Tasks and daily goals\n" +
+    "• Weekly points and rewards\n" +
+    "• Monthly savings and progress\n" +
+    "• Football cards and streaks\n" +
+    "• League results and Hall of Fame\n\n" +
+    "The chart's tasks, rewards, players and features will remain.\n\n" +
+    "Are you sure?"
+  );
+
+  if (!confirmed) return;
+
+  localStorage.removeItem("jacobRewardChart");
+
+  alert("The chart has been reset. It will now start fresh.");
+
+  location.reload();
+}
+
+function clearPlayerCollection() {
+
+  const password = prompt("Parent password required:");
+
+  if (password !== "2018") {
+    if (password !== null) {
+      alert("Incorrect password. Nothing has been cleared.");
+    }
+    return;
+  }
+
+  const confirmed = confirm(
+    "⚠️ CLEAR JACOB'S PLAYER COLLECTION?\n\n" +
+    "This will permanently erase:\n\n" +
+    "• All collected football cards\n" +
+    "• The current perfect-day streak\n\n" +
+    "All tasks, points and savings will remain untouched.\n\n" +
+    "Are you sure?"
+  );
+
+  if (!confirmed) return;
+
+  jacobState.playerCards = [];
+  jacobState.perfectDayStreak = 0;
+
+  saveJacobState();
+  displayPlayerCards();
+
+  alert("⚽ Jacob's player collection has been cleared!");
+}
+
+function updateFootballPosition() {
+  const ball = document.getElementById("football");
+
+  // Work out whether we are showing the morning or evening routine
+const eveningStarted = window.eveningRoutineActive === true;
+
+  // Count the completed tasks for the active routine
+  const completedTasks = eveningStarted
+    ? jacobState.eveningCompleted.length
+    : jacobState.morningCompleted.length;
+
+  // Ball positions as it moves up the pitch
+  const passPositions = [
+    { left: "50%", bottom: 60 },
+    { left: "15%", bottom: 190 },
+    { left: "85%", bottom: 190 },
+    { left: "85%", bottom: 345 },
+    { left: "15%", bottom: 345 },
+    { left: "50%", bottom: 480 }
+  ];
+
+  const position = passPositions[completedTasks];
+
+  ball.style.left = position.left;
+  ball.style.bottom = position.bottom + "px";
+  // Trigger the football rotation
+ball.classList.remove("kicking");
+void ball.offsetWidth;
+ball.classList.add("kicking");
+}
+
+  // Update the scoreboard
+function buyWeeklyReward(rewardType) {
+  const rewards = {
+    bronze: { name: "Bronze – Meal Deal", cost: 100 },
+    silver: { name: "Silver – £5 Pocket Money", cost: 200 },
+    gold: { name: "Gold – Family Film or TV with Snacks", cost: 400 }
+  };
+
+  const reward = rewards[rewardType];
+
+  if (!reward) return;
+
+  if (jacobState.claimedWeeklyRewards.includes(rewardType)) {
+    alert("You've already bought this reward!");
+    return;
+  }
+
+  const availablePoints =
+    jacobState.weeklyPoints - jacobState.weeklyPointsSpent;
+
+  if (availablePoints < reward.cost) {
+    alert("Not enough points yet! Keep completing your tasks.");
+    return;
+  }
+
+  jacobState.weeklyPointsSpent += reward.cost;
+  jacobState.claimedWeeklyRewards.push(rewardType);
+
+  saveJacobState();
+  updateScoreboard();
+
+  alert("Well done! You've bought: " + reward.name);
+}
+
+function buyMonthlyReward(rewardName) {
+  const reward = monthlyRewards.find(
+    item => item.name === rewardName
+  );
+
+  if (!reward) return;
+
+  if (!hasQualifiedForMonthlyPrize()) {
+    alert("You need to reach 80% of your monthly tasks first!");
+    return;
+  }
+
+  if (jacobState.monthlyPrizeClaimed) {
+    alert("You've already claimed your monthly prize!");
+    return;
+  }
+
+  if (jacobState.monthlySavings < reward.cost) {
+    alert("Not enough Monthly Savings points yet!");
+    return;
+  }
+
+  jacobState.monthlySavings -= reward.cost;
+  jacobState.monthlyPrizeClaimed = true;
+
+  saveJacobState();
+  updateScoreboard();
+
+  alert("Well done! You've chosen: " + reward.name);
+}
+
+
+function displayWeeklyRewards() {
+  document.querySelectorAll("#weekly-rewards .reward-card").forEach(card => {
+    const button = card.querySelector("button");
+    const rewardType = button.getAttribute("onclick")
+      .match(/'([^']+)'/)[1];
+
+    const purchased =
+      jacobState.claimedWeeklyRewards.includes(rewardType);
+
+    button.disabled = purchased;
+    button.textContent = purchased ? "Purchased" : "Buy Reward";
+    button.classList.toggle("purchased", purchased);
+  });
+}
+
+function updateScoreboard() {
+  const jacobGoals =
+    Number(jacobState.morningGoalScored) +
+    Number(jacobState.eveningGoalScored);
+
+  document.getElementById("score").textContent =
+    jacobGoals + " - 0";
+
+  // Update Reward Shop balances
+  document.getElementById("weekly-points").textContent =
+    jacobState.weeklyPoints - jacobState.weeklyPointsSpent;
+
+  displayWeeklyRewards();
+
+  document.getElementById("monthly-savings").textContent =
+    jacobState.monthlySavings;
+
+  // Update Monthly Champions progress
+  const monthlyTarget = getMonthlyTarget();
+
+  document.getElementById("monthly-tasks-completed").textContent =
+    jacobState.monthlyTasksCompleted;
+
+  document.getElementById("monthly-target").textContent =
+    monthlyTarget.requiredTasks;
+
+  const progressPercent = Math.min(
+    100,
+    (jacobState.monthlyTasksCompleted / monthlyTarget.requiredTasks) * 100
+  );
+
+  document.getElementById("monthly-progress-fill").style.width =
+    progressPercent + "%";
+
+  document.getElementById("monthly-progress-message").textContent =
+    hasQualifiedForMonthlyPrize()
+      ? "Brilliant! You've qualified for your monthly reward!"
+      : "Keep going, Jacob! You're making progress.";
+
+  // Update monthly reward buttons
+  const bookButton = document.getElementById("monthly-book-button");
+  const cinemaButton = document.getElementById("monthly-cinema-button");
+
+  const qualified = hasQualifiedForMonthlyPrize();
+
+  bookButton.disabled =
+    !qualified ||
+    jacobState.monthlySavings < 175 ||
+    jacobState.monthlyPrizeClaimed;
+
+  cinemaButton.disabled =
+    !qualified ||
+    jacobState.monthlySavings < 220 ||
+    jacobState.monthlyPrizeClaimed;
+
+  if (jacobState.monthlyPrizeClaimed) {
+    bookButton.textContent = "Prize Claimed";
+    cinemaButton.textContent = "Prize Claimed";
+  } else {
+    bookButton.textContent = "Buy New Book – 175 points";
+    cinemaButton.textContent = "Buy Cinema Trip – 220 points";
+  }
+
+  updateLeagueTable();
+  updateLeagueHallOfFame();
+  updateLeagueResults();
+}
+
+  // Morning countdown to 08:20
+  function updateMorningCountdown() {
+    const now = new Date();
+
+    const deadline = new Date();
+    deadline.setHours(8, 20, 0, 0);
+
+    const countdown = document.getElementById("morning-countdown");
+
+    // Check whether all morning tasks are complete
+    if (jacobState.morningCompleted.length === morningTasks.length) {
+      countdown.textContent = "GOAL COMPLETE! ⚽";
+      return;
+    }
+
+    // Show time's up if today's deadline has passed
+    if (now >= deadline) {
+countdown.textContent = "⏸ HALF TIME!";
+      return;
+    }
+
+    // Calculate remaining time
+    const remaining = deadline - now;
+
+    const hours = Math.floor(remaining / 3600000);
+    const minutes = Math.floor((remaining % 3600000) / 60000);
+    const seconds = Math.floor((remaining % 60000) / 1000);
+
+    countdown.textContent =
+      String(hours).padStart(2, "0") + ":" +
+      String(minutes).padStart(2, "0") + ":" +
+      String(seconds).padStart(2, "0");
+  }
+
+  // Refresh the countdown every second
+  updateMorningCountdown();
+  setInterval(updateMorningCountdown, 1000);
+
+// Check whether a new day has started
+checkForNewDay();
+
+  // Restore saved morning tasks when the page opens
+  morningTasks.forEach((task, index) => {
+    document.getElementById("morning-" + index).checked =
+      jacobState.morningCompleted.includes(index);
+  });
+  // Restore saved evening tasks when the page opens
+  eveningTasks.forEach((task, index) => {
+    document.getElementById("evening-" + index).checked =
+      jacobState.eveningCompleted.includes(index);
+  });
+  updateScoreboard();
+  displayPlayerCards();
+  // Evening countdown to 19:00
+  function updateEveningCountdown() {
+    const now = new Date();
+
+    const deadline = new Date();
+    deadline.setHours(19, 0, 0, 0);
+
+    const countdown = document.getElementById("evening-countdown");
+
+    // Check whether all evening tasks are complete
+    if (jacobState.eveningCompleted.length === eveningTasks.length) {
+      countdown.textContent = "GOAL COMPLETE! ⚽";
+      return;
+    }
+
+    // Show full time after 19:00
+    if (now >= deadline) {
+      countdown.textContent = "🏁 FULL TIME!";
+      return;
+    }
+
+    // Calculate remaining time
+    const remaining = deadline - now;
+
+    const hours = Math.floor(remaining / 3600000);
+    const minutes = Math.floor((remaining % 3600000) / 60000);
+    const seconds = Math.floor((remaining % 60000) / 1000);
+
+    countdown.textContent =
+      String(hours).padStart(2, "0") + ":" +
+      String(minutes).padStart(2, "0") + ":" +
+      String(seconds).padStart(2, "0");
+  }
+
+  // Refresh the evening countdown every second
+  updateEveningCountdown();
+  setInterval(updateEveningCountdown, 1000);
+updateFootballPosition();
+// Check for a new day when returning to the chart
+window.addEventListener("focus", function() {
+
+  const previousDate = jacobState.currentDayDate;
+
+  checkForNewDay();
+
+  // Only refresh if a new day has started
+  if (jacobState.currentDayDate !== previousDate) {
+    location.reload();
+  }
+
+});
+</script>
+</body>
+</html>
