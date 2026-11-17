@@ -1257,6 +1257,10 @@ function getTodayMonthKey() {
 
   return year + "-" + month;
 }
+// Provide defaults for older browsers
+function valueOrDefault(value, fallback) {
+  return value === null || value === undefined ? fallback : value;
+}
 
 // Save Jacob's progress
 function saveJacobState() {
@@ -1274,30 +1278,32 @@ function loadJacobState() {
     const state = JSON.parse(saved);
 
     // Add new reward-system values without losing existing progress
-    return {
+     return {
       ...state,
-      weeklyPoints: state.weeklyPoints ?? 0,
-      monthlySavings: state.monthlySavings ?? 0,
-      monthlySavingsMonth: state.monthlySavingsMonth ?? getTodayMonthKey(),
-      monthlyPrizeClaimed: state.monthlyPrizeClaimed ?? false,
-      monthlyTasksCompleted: state.monthlyTasksCompleted ?? 0,
-      weeklyPointsSpent: state.weeklyPointsSpent ?? 0,
-      claimedWeeklyRewards: state.claimedWeeklyRewards ?? [],
-    // Monthly league data
-    leagueMonth: state.leagueMonth ?? getTodayMonthKey(),
-    leaguePoints: state.leaguePoints ?? [0, 0, 0, 0, 0, 0],
-    leaguePlayed: state.leaguePlayed ?? [0, 0, 0, 0, 0, 0],
-    leagueResults: state.leagueResults ?? [],
-    leagueHallOfFame: state.leagueHallOfFame ?? [],
+      weeklyPoints: valueOrDefault(state.weeklyPoints, 0),
+      monthlySavings: valueOrDefault(state.monthlySavings, 0),
+      monthlySavingsMonth: valueOrDefault(state.monthlySavingsMonth, getTodayMonthKey()),
+      monthlyPrizeClaimed: valueOrDefault(state.monthlyPrizeClaimed, false),
+      monthlyTasksCompleted: valueOrDefault(state.monthlyTasksCompleted, 0),
+      weeklyPointsSpent: valueOrDefault(state.weeklyPointsSpent, 0),
+      claimedWeeklyRewards: valueOrDefault(state.claimedWeeklyRewards, []),
+
+      // Monthly league data
+      leagueMonth: valueOrDefault(state.leagueMonth, getTodayMonthKey()),
+      leaguePoints: valueOrDefault(state.leaguePoints, [0, 0, 0, 0, 0, 0]),
+      leaguePlayed: valueOrDefault(state.leaguePlayed, [0, 0, 0, 0, 0, 0]),
+      leagueResults: valueOrDefault(state.leagueResults, []),
+      leagueHallOfFame: valueOrDefault(state.leagueHallOfFame, []),
+
       // Football card collection
-      playerCards: state.playerCards ?? [],
+      playerCards: valueOrDefault(state.playerCards, []),
 
       // Perfect-day streak for Rare cards
-      perfectDayStreak: state.perfectDayStreak ?? 0,
+      perfectDayStreak: valueOrDefault(state.perfectDayStreak, 0),
 
       // Track the last day a card was awarded
-      lastCardAwardDate: state.lastCardAwardDate ?? null,
-      currentDayDate: state.currentDayDate ?? getTodayDateKey()
+      lastCardAwardDate: valueOrDefault(state.lastCardAwardDate, null),
+      currentDayDate: valueOrDefault(state.currentDayDate, getTodayDateKey())
     };
   }
 
@@ -2057,37 +2063,37 @@ function displayPlayerCards() {
     cardElement.className = "player-card " + card.type.toLowerCase();
 
     // Existing cards default to the Standard photograph
-    const edition = card.edition ?? "Standard";
+    const edition = valueOrDefault(card.edition, "Standard");
 
     const imageFilename = getPlayerImageFilename(card.name, edition);
 
     cardElement.innerHTML = `
-      <div class="card-rating">${card.rating ?? "—"}</div>
-      <div class="card-club">${card.club ?? "Football Legend"}</div>
+      <div class="card-rating">${valueOrDefault(card.rating, "—")}</div>
+      <div class="card-club">${valueOrDefault(card.club, "Football Legend")}</div>
 
       <div class="card-player-image">
-        <img src="${imageFilename}" alt="${card.name}">
+        <img src="${imageFilename}" alt="${valueOrDefault(card.name, "Unknown Player")}">
       </div>
 
-      <div class="card-player-name">${card.name ?? "Unknown Player"}</div>
+      <div class="card-player-name">${valueOrDefault(card.name, "Unknown Player")}</div>
 
       <div class="card-position">
-        ${card.position ?? "Player"} · ${card.type.toUpperCase()} CARD
+        ${valueOrDefault(card.position, "Player")} · ${card.type.toUpperCase()} CARD
       </div>
 
       <div class="card-stats">
-        <span>PAC <b>${card.stats?.pace ?? "—"}</b></span>
-        <span>SHO <b>${card.stats?.shooting ?? "—"}</b></span>
-        <span>PAS <b>${card.stats?.passing ?? "—"}</b></span>
-        <span>DRI <b>${card.stats?.dribbling ?? "—"}</b></span>
-        <span>DEF <b>${card.stats?.defending ?? "—"}</b></span>
-        <span>PHY <b>${card.stats?.physical ?? "—"}</b></span>
+        <span>PAC <b>${valueOrDefault(card.stats && card.stats.pace, "—")}</b></span>
+        <span>SHO <b>${valueOrDefault(card.stats && card.stats.shooting, "—")}</b></span>
+        <span>PAS <b>${valueOrDefault(card.stats && card.stats.passing, "—")}</b></span>
+        <span>DRI <b>${valueOrDefault(card.stats && card.stats.dribbling, "—")}</b></span>
+        <span>DEF <b>${valueOrDefault(card.stats && card.stats.defending, "—")}</b></span>
+        <span>PHY <b>${valueOrDefault(card.stats && card.stats.physical, "—")}</b></span>
       </div>
 
       <div class="card-divider"></div>
 
       <div class="card-details">
-        <span>Shirt No. ${card.number ?? "—"}</span>
+        <span>Shirt No. ${valueOrDefault(card.number, "—")}</span>
         <span>Card ${index + 1} / 180</span>
       </div>
 
